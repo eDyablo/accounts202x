@@ -34,8 +34,6 @@ WORKDIR /opt/finance
 
 COPY --from=build /opt/finance .
 
-COPY static static
-COPY templates templates
 COPY *.py .
 
 ENV FLASK_ENV=development
