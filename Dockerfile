@@ -11,7 +11,7 @@ RUN apk update --no-cache \
   py3-pip \
   python3-dev
 
-WORKDIR /opt/finance
+WORKDIR /opt/accounts
 
 COPY requirements.txt .
 
@@ -30,9 +30,9 @@ RUN apk update --no-cache \
   libpq \
   python3
 
-WORKDIR /opt/finance
+WORKDIR /opt/accounts
 
-COPY --from=build /opt/finance .
+COPY --from=build /opt/accounts .
 
 COPY *.py .
 
