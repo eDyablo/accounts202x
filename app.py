@@ -30,10 +30,10 @@ def accounts():
         return jsonify({'account': account.toJSON()}), 201
     elif request.method == 'GET':
         accounts = db.session.query(Account).all()
-        return jsonify({'accounts': [account.toJSON() for account in accounts]})
+        return jsonify({'accounts': [account.serialized() for account in accounts]})
 
 
 @app.route('/api/v1.0/accounts/<account_id>', methods=['GET'])
 def get_account(account_id):
     account = db.session.query(Account).get(account_id)
-    return jsonify({'account': account.toJSON()})
+    return jsonify({'account': account.serialized()})

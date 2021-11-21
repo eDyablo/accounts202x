@@ -2,7 +2,6 @@ from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
-import json
 
 db = SQLAlchemy()
 
@@ -19,6 +18,3 @@ class Account(db.Model):
             'id': str(self.id),
             'name': self.name,
         }
-
-    def toJSON(self):
-        return json.dumps(self.serialized())
