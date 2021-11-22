@@ -1,8 +1,7 @@
-from flask import Blueprint, abort
-from flask_restful import Api, Resource
+from flask import Blueprint
+from flask_restful import Api, Resource, abort
 from flask_restful.reqparse import RequestParser
 from flask.json import jsonify
-from os import stat
 import models
 import re
 
@@ -43,8 +42,19 @@ class Account(Resource):
             raise ValueError('Can not start with number')
         return value
 
+    @staticmethod
+    def valid_id(value):
+        if not str or not isinstance(value, str) or not len(value) > 0:
+            abort(400, message={'id': 'Must be non empty string'})
+        if not len(value) == 36 or re.search(r"[^a-fA-F0-9-]", value):
+            abort(400, message={'id': 'Has invalid format'})
+        return value
+
     def get(self, account_id):
-        account = models.db.session.query(models.Account).get(account_id)
+        account = models.db.session.query(
+            models.Account).get(Account.valid_id(account_id))
+        if not account:
+            abort(404, message=f'Account {account_id} does not exist')
         return jsonify({'account': publish_account(account)})
 
 
@@ -59,11 +69,12 @@ class AccountList(Resource):
     def post(self):
         parser = Account.args_parser()
         args = parser.parse_args(strict=True)
+        name = args['name']
         account = models.db.session.query(models.Account).filter(
-            models.Account.name == args['name']).first()
+            models.Account.name == name).first()
         if account:
-            abort(400)
-        account = models.Account(name=args['name'])
+            abort(400, message=f'Account {name} already exits')
+        account = models.Account(name=name)
         models.db.session.add(account)
         models.db.session.commit()
         return jsonify({'account': publish_account(account)})
