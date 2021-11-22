@@ -21,6 +21,7 @@ def publish_account(account: models.Account):
     }
 
 
+@api.resource('/accounts/<string:account_id>')
 class Account(Resource):
     @staticmethod
     def args_parser() -> RequestParser:
@@ -58,9 +59,7 @@ class Account(Resource):
         return jsonify({'account': publish_account(account)})
 
 
-api.add_resource(Account, '/accounts/<string:account_id>')
-
-
+@api.resource('/accounts')
 class AccountList(Resource):
     def get(self):
         accounts = models.db.session.query(models.Account).all()
@@ -78,6 +77,3 @@ class AccountList(Resource):
         models.db.session.add(account)
         models.db.session.commit()
         return jsonify({'account': publish_account(account)})
-
-
-api.add_resource(AccountList, '/accounts')
