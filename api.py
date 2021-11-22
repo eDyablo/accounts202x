@@ -52,11 +52,21 @@ class Account(Resource):
         return value
 
     def get(self, account_id):
+        account = self.get_account(account_id)
+        return jsonify({'account': publish_account(account)})
+
+    def delete(self, account_id):
+        account = self.get_account(account_id)
+        models.db.session.delete(account)
+        models.db.session.commit()
+        return jsonify({'uri': api.url_for(AccountList, _external=True)})
+
+    def get_account(self, account_id) -> models.Account:
         account = models.db.session.query(
             models.Account).get(Account.valid_id(account_id))
         if not account:
             abort(404, message=f'Account {account_id} does not exist')
-        return jsonify({'account': publish_account(account)})
+        return account
 
 
 @api.resource('/accounts')
