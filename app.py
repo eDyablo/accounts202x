@@ -1,8 +1,8 @@
 from api import api, blueprint
-from flask import Flask, abort, request, url_for
+from flask import Flask
 from flask_migrate import Migrate
 from flask.json import jsonify
-from models import db, Account
+from models import db
 from os import environ
 
 # Make sure database URL is set
