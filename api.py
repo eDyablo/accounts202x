@@ -37,7 +37,8 @@ class Account(Resource):
         if len(value) < 6:
             raise ValueError('Must be at least 6 symbols long')
         if re.search(r"[^a-zA-Z0-9-_]", value):
-            raise ValueError('Can contain only letters, numbers, hyphen or underscore')
+            raise ValueError(
+                'Can contain only letters, numbers, hyphen or underscore')
         if value[0].isdigit():
             raise ValueError('Can not start with number')
         return value
