@@ -36,7 +36,7 @@ class Account(Resource):
             raise ValueError('Must be non empty string')
         if len(value) < 6:
             raise ValueError('Must be at least 6 symbols long')
-        if re.search(r"[^a-zA-Z0-9-_]", value):
+        if re.search(r'[^a-zA-Z0-9-_]', value):
             raise ValueError(
                 'Can contain only letters, numbers, hyphen or underscore')
         if value[0].isdigit():
@@ -47,7 +47,7 @@ class Account(Resource):
     def valid_id(value):
         if not str or not isinstance(value, str) or not len(value) > 0:
             abort(400, message={'id': 'Must be non empty string'})
-        if not len(value) == 36 or re.search(r"[^a-fA-F0-9-]", value):
+        if not len(value) == 36 or re.search(r'[^a-fA-F0-9-]', value):
             abort(400, message={'id': 'Has invalid format'})
         return value
 
