@@ -1,7 +1,7 @@
-from flask import Flask, abort, request
+from api import api, blueprint
+from flask import Flask, abort, request, url_for
 from flask_migrate import Migrate
 from flask.json import jsonify
-from flask_sqlalchemy import SQLAlchemy
 from models import db, Account
 from os import environ
 
@@ -18,22 +18,5 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 
-
-@app.route('/api/v1.0/accounts', methods=['GET', 'POST'])
-def accounts():
-    if request.method == 'POST':
-        if not request.json or not 'name' in request.json:
-            abort(400)
-        account = Account(name=request.json['name'])
-        db.session.add(account)
-        db.session.commit()
-        return jsonify({'account': account.toJSON()}), 201
-    elif request.method == 'GET':
-        accounts = db.session.query(Account).all()
-        return jsonify({'accounts': [account.serialized() for account in accounts]})
-
-
-@app.route('/api/v1.0/accounts/<account_id>', methods=['GET'])
-def get_account(account_id):
-    account = db.session.query(Account).get(account_id)
-    return jsonify({'account': account.serialized()})
+api.init_app(app)
+app.register_blueprint(blueprint)
